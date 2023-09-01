@@ -1,13 +1,14 @@
 import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
-import AppNavigation from './src/navigation/AppNavigation'
 
-const App = () => {
+const SearchScreen = () => {
   return (
-    <AppNavigation/>
+    <View>
+      <Text>SearchScreen</Text>
+    </View>
   )
 }
 
-export default App
+export default SearchScreen
 
 const styles = StyleSheet.create({})
