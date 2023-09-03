@@ -33,9 +33,7 @@ const MovieScreen = () => {
             <Icon name='chevron-back-outline' size={28} color={"white"} />
           </TouchableOpacity>
           <TouchableOpacity onPress={() => setIsFavorite(!isFavorite)}>
-            {
-              isFavorite ? <Icon name='heart' size={35} color={"#eab308"} /> : <Icon name='heart' size={35} color={"white"} />
-            }
+          <Icon name='heart' size={35} color={isFavorite ? "#eab308" : "white"} />
           </TouchableOpacity>
         </SafeAreaView>
         <View>
