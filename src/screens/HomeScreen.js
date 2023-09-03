@@ -6,6 +6,7 @@ import Icon from 'react-native-vector-icons/Ionicons'
 import TrendingMovies from '../components/TrendingMovies'
 import MovieList from '../components/MovieList'
 import { useNavigation } from '@react-navigation/native'
+import Loading from '../components/Loading'
 
 const data = [
   {
@@ -28,6 +29,7 @@ const data = [
 
 const HomeScreen = () => {
   const [trending, setTrending] = useState(data);
+  const [isLoading, setIsLoading] = useState(false);
   const navigation = useNavigation();
   return (
     <View style={{ flex: 1, backgroundColor: "#272829" }}>
@@ -50,19 +52,25 @@ const HomeScreen = () => {
           </TouchableOpacity>
         </View>
       </SafeAreaView>
+      {
+        isLoading ? (
+          <Loading />
+        ) : (
+          <ScrollView
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={{ paddingBottom: 10 }}
+          >
+            {/* Trending Movies  */}
+            <TrendingMovies data={trending} />
+            {/* Upcoming movie now */}
+            <MovieList title="Upcoming" data={trending} />
 
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ paddingBottom: 10 }}
-      >
-        {/* Trending Movies  */}
-        <TrendingMovies data={trending} />
-        {/* Upcoming movie now */}
-        <MovieList title="Upcoming" data={trending} />
+            {/* Toprate movie now */}
+            <MovieList title="Top Rated" data={trending} />
+          </ScrollView>
+        )
+      }
 
-        {/* Toprate movie now */}
-        <MovieList title="Top Rated" data={trending} />
-      </ScrollView>
     </View>
   )
 }
