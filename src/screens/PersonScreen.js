@@ -6,21 +6,40 @@ import Icon from 'react-native-vector-icons/Ionicons'
 
 import MovieList from '../components/MovieList';
 import Loading from '../components/Loading'
+import { fallbackPersonImage, fetchDetailPeople, fetchPersonMovie, image342 } from '../api/MovieDB'
 
 var { width, height } = Dimensions.get('window');
 const PersonScreen = () => {
   const { params: person } = useRoute();
   const [isFavorite, setIsFavorite] = useState(false);
-  const [personMovies, setPersonMovies] = useState([1, 2, 3, 4, 5, 6]);
+  const [personMovies, setPersonMovies] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const navigation = useNavigation();
+  const [people, setPeople] = useState({});
   let personName = "Keanu Reeves";
   let characterName = "John Smith";
   useEffect(() => {
-    //call the movie detail api
-  }, [person])
+    //call the person detail api
+    setIsLoading(true);
+    console.log("person", person);
+    getDetailPeople(person.id);
+    getPersonMovies(person.id);
+  }, [person]);
+
+  const getDetailPeople = async id => {
+    const data = await fetchDetailPeople(id);
+    // console.log("Data", data);
+    if (data) setPeople(data);
+    setIsLoading(false);
+  }
+  const getPersonMovies = async id => {
+    const data = await fetchPersonMovie(id);
+    console.log("Data", data);
+    if (data && data.cast) setPersonMovies(data.cast);
+    setIsLoading(false);
+  }
   return (
-    <ScrollView style={{ backgroundColor: "#272829", flex: 1 }}>
+    <ScrollView style={{ backgroundColor: "#272829", flex: 1 }} showsVerticalScrollIndicator={false}>
       <SafeAreaView style={{ flexDirection: "row", justifyContent: 'space-between', alignItems: "center", paddingHorizontal: 16, position: 'relative', zIndex: 1, marginTop: 20 }}>
         <TouchableOpacity
           onPress={() => navigation.goBack()}
@@ -41,19 +60,26 @@ const PersonScreen = () => {
             <View style={{
               flexDirection: 'row', justifyContent: 'center',
             }}>
-              <View style={{ alignItems: "center", width: 260, height: 260, overflow: "hidden", borderWidth: 2, borderColor: "gray", borderRadius: 1000 }}>
-                <Image style={{
-                  width: width * 0.74, height: height * 0.43
-                }} source={require("../assets/images/castImage1.png")} />
+              <View style={{ alignItems: "center"}}>
+                <Image
+                  style={{
+                    width: 260, height: 260, borderRadius: 1000, borderWidth: 2, borderColor: 'white',
+                  }}
+                  // source={require("../assets/images/castImage1.png")} 
+                  resizeMode='contain'
+                  source={{ uri: image342(people?.profile_path) || fallbackPersonImage }}
+                />
               </View>
             </View>
 
             <View style={{ marginTop: 16 }}>
               <Text style={{ color: 'white', fontSize: 30, textAlign: 'center', fontWeight: "bold" }}>
-                {personName}
+                {people?.name}
               </Text>
               <Text style={{ color: '#D0C9C0', fontSize: 18, textAlign: 'center', fontWeight: "500" }}>
-                London, United Kingdom
+                {
+                  people?.place_of_birth
+                }
               </Text>
             </View>
 
@@ -63,25 +89,31 @@ const PersonScreen = () => {
             }}>
               <View style={{ padding: 8, borderRightWidth: 2, alignItems: "center", borderColor: "white" }}>
                 <Text style={{ color: "white", fontSize: 16, fontWeight: "700" }}>Gender</Text>
-                <Text style={{ color: "#D0C9C0", fontSize: 16, fontWeight: "700" }}>Male</Text>
+                <Text style={{ color: "#D0C9C0", fontSize: 16, fontWeight: "700" }}>
+                  {
+                    people?.gender == 2 ? "Male" : "Female"
+                  }
+                </Text>
               </View>
               <View style={{ padding: 8, borderRightWidth: 2, alignItems: "center", borderColor: "white" }}>
                 <Text style={{ color: "white", fontSize: 16, fontWeight: "700" }}>Birthday</Text>
-                <Text style={{ color: "#D0C9C0", fontSize: 16, fontWeight: "700" }}>1964-09-02</Text>
+                <Text style={{ color: "#D0C9C0", fontSize: 16, fontWeight: "700" }}>{people?.birthday}</Text>
               </View>
               <View style={{ padding: 8, borderRightWidth: 2, alignItems: "center", borderColor: "white" }}>
                 <Text style={{ color: "white", fontSize: 16, fontWeight: "700" }}>Know for</Text>
-                <Text style={{ color: "#D0C9C0", fontSize: 16, fontWeight: "700" }}>Acting</Text>
+                <Text style={{ color: "#D0C9C0", fontSize: 16, fontWeight: "700" }}>{people?.known_for_department}</Text>
               </View>
               <View style={{ padding: 8, alignItems: "center", borderColor: "white" }}>
                 <Text style={{ color: "white", fontSize: 16, fontWeight: "700" }}>Popularity</Text>
-                <Text style={{ color: "#D0C9C0", fontSize: 16, fontWeight: "700" }}>64.23</Text>
+                <Text style={{ color: "#D0C9C0", fontSize: 16, fontWeight: "700" }}>{people?.popularity}</Text>
               </View>
             </View>
             <View style={{ marginTop: 16, marginHorizontal: 16, }}>
               <Text style={{ color: "white", fontSize: 20, fontWeight: 'bold' }}>Biography</Text>
               <Text style={{ color: "#D0C9C0", fontSize: 16, fontWeight: 'bold', marginVertical: 16 }}>
-                Finding himself in a new era, and approaching retirement, Indy wrestles with fitting into a world that seems to have outgrown him. But as the tentacles of an all-too-familiar evil return in the form of an old rival, Indy must don his hat and pick up his whip once more to make sure an ancient and powerful artifact doesn't fall into the wrong hands.
+                {
+                  people?.biography
+                }
               </Text>
             </View>
             {/* Movies */}

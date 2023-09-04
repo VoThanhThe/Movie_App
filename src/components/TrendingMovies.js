@@ -1,11 +1,17 @@
 import { StyleSheet, Text, View, Dimensions, Image, FlatList, TouchableOpacity } from 'react-native'
 import React from 'react'
 import { useNavigation } from '@react-navigation/native';
+import { image500 } from '../api/MovieDB';
 
 const MovieCard = ({item, handleClick}) => {
+  console.log("item.poster_path: " , item.poster_path)
     return (
       <TouchableOpacity onPress={() => handleClick(item)}>
-        <Image style = {{width: 250, height: 350, borderRadius: 10, marginHorizontal: 8}} source={require('../assets/images/moviePoster1.png')} />
+        <Image 
+        style = {{width: 250, height: 350, borderRadius: 10, marginHorizontal: 8}} 
+        // source={require('../assets/images/moviePoster1.png')} 
+        source={{uri: image500(item.poster_path)}} 
+        />
       </TouchableOpacity>
     )
   }

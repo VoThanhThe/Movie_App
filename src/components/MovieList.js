@@ -1,6 +1,7 @@
 import { Dimensions, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React from 'react'
 import { useNavigation } from '@react-navigation/native'
+import { fallbackMoviePoster, image185 } from '../api/MovieDB';
 
 const { width, height } = Dimensions.get('window');
 
@@ -33,10 +34,14 @@ const MovieList = ({ title, data, hideSeeAll }) => {
                 onPress={() => navigation.push("Movie", item)}
               >
                 <View style={{ marginVertical: 16, marginEnd: 16 }}>
-                  <Image style={{ borderRadius: 10, width: width * 0.33, height: height * 0.22 }} source={require("../assets/images/moviePoster2.png")} />
+                  <Image 
+                  style={{ borderRadius: 10, width: width * 0.33, height: height * 0.22 }} 
+                  // source={require("../assets/images/moviePoster2.png")} 
+                  source={{uri: image185(item.poster_path) || fallbackMoviePoster}} 
+                  />
                   <Text style={{ color: "white", fontSize: 16, fontWeight: "500", marginTop: 4 }}>
                     {
-                      movieName.length > 14 ? movieName.slice(0, 14) + "..." : movieName
+                      item.title.length > 14 ? item.title.slice(0, 14) + "..." : item.title
                     }
                   </Text>
                 </View>
